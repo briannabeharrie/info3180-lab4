@@ -6,8 +6,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
 from app.models import UserProfile
 from .forms import LoginForm
-
-
+from app.forms import UploadForm
 ###
 # Routing for your application.
 ###
@@ -23,20 +22,17 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
-
-@app.route('/upload', methods=['POST', 'GET'])
+@app.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload():
-    # Instantiate your form class
-
-    # Validate file upload on submit
-    if form.validate_on_submit():
-        # Get file data and save to your uploads folder
-
-        flash('File Saved', 'success')
-        return redirect(url_for('home')) # Update this to redirect the user to a route that displays all uploaded image files
-
-    return render_template('upload.html')
-
+    form = UploadForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        file = form.image.data
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        flash('File uploaded successfully!', 'success')
+        return redirect(url_for('upload'))
+    return render_template('upload.html', form=form)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -62,7 +58,6 @@ def login():
 @login_manager.user_loader
 def load_user(id):
     return db.session.execute(db.select(UserProfile).filter_by(id=id)).scalar()
-
 ###
 # The functions below should be applicable to all Flask apps.
 ###
