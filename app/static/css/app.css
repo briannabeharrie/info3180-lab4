@@ -18,3 +18,30 @@ body {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+/* Add custom CSS for the Flexbox grid layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.files-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.file-item {
+    flex: 0 0 calc(33.33% - 20px); /* Adjust width to create 3 columns with spacing */
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.file-item:last-child {
+    margin-right: 0;
+}
+
+.img-thumbnail {
+    width: 100%;
+    height: auto;
+}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container">
+  <h1 class="page-header">Uploaded Files</h1>
+  <div class="files-container">
+    {% for image_file in image_files %}
+        {% if not image_file.startswith('.gitkeep') %}
+            <div class="file-item">
+                <img src="{{ url_for('get_image', filename=image_file) }}" class="img-thumbnail" alt="">
+            </div>
+        {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

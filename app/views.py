@@ -4,9 +4,12 @@ from flask import render_template, request, redirect, url_for, flash, session, a
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
+from flask import send_from_directory
+from .helper import get_uploaded_images
 from app.models import UserProfile
 from .forms import LoginForm
 from app.forms import UploadForm
+from . import app
 ###
 # Routing for your application.
 ###
@@ -53,6 +56,16 @@ def login():
     
     return render_template('login.html', form=form)
 
+@app.route('/uploads/<filename>')
+def get_image(filename):
+    uploads_dir = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'])
+    return send_from_directory(uploads_dir, filename)
+
+@app.route('/files')
+@login_required
+def files():
+    image_files = get_uploaded_images(app)
+    return render_template('files.html', image_files=image_files)
 # user_loader callback. This callback is used to reload the user object from
 # the user ID stored in the session
 @login_manager.user_loader
