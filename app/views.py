@@ -71,6 +71,12 @@ def files():
 @login_manager.user_loader
 def load_user(id):
     return db.session.execute(db.select(UserProfile).filter_by(id=id)).scalar()
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    flash('You have been logged out.', 'Success')
+    return redirect(url_for('home'))
 ###
 # The functions below should be applicable to all Flask apps.
 ###
